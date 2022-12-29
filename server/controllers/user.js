@@ -1,10 +1,5 @@
 import User from "../models/User"
 
-
-// ,
-//     getUserFriends,
-//     addRemoveFriend
-
 export const getUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -60,7 +55,7 @@ export const addRemoveFriend = async (req, res) => {
             }
         )
         res.status(200).json(formattedFriends)
-        
+
     } catch (error) {
         res.status(200).json(formattedFriends)
     }
