@@ -9,9 +9,20 @@ import morgan from "morgan"
 import path from "path"
 import { fileURLToPath } from "url"
 import { register } from './controllers/auth.js'
+import PostClass from './controllers/posts.js'
 import authRoutes from './routes/auth.js'
 import usersRoutes from './routes/users.js'
 import postsRoutes from './routes/posts.js'
+import { verifyToken } from "./middleware/auth.js"
+
+/*
+    
+    // UnComment it Only For the First Time To Intilliaze the First Data
+
+    import User from "./models/User.js"
+    import Post from "./models/Post.js"
+    import { users, posts } from "./data/index.js"
+*/
 
 /* CONFIGRATIONS */
 const __filename = fileURLToPath(import.meta.url)
@@ -45,6 +56,11 @@ const upload = multer({
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register)
 
+const post = new PostClass()
+
+app.post("/posts", verifyToken, upload.single("picture"), post.createPost)
+
+
 /* ROUTES */
 app.use("/auth", authRoutes)
 app.use("/users", usersRoutes)
@@ -62,4 +78,11 @@ mongoose.connect(MOGOOSE_URL, {
     useUnifiedTopology: true
 }).then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`))
+    /*
+     // UnComment it Only For the First Time To Intilliaze the First Data
+
+     * User.insertMany(users)
+     * Post.insertMany(posts)
+     */
+    
 }).catch((err) => console.log(`${err} did not connect`))
